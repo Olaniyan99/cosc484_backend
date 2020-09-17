@@ -1,0 +1,13 @@
+{
+    "restartable": "rs",
+    "ignore": ["**/*.test.ts", "**/*.spec.ts", ".git", "node_modules"],
+    "watch": ["src"],
+    "exec": "ts-node ./src/app.ts",
+    "ext": "ts",
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "events": {
+      "restart": "osascript -e 'display notification \"App restarted due to:\n'$FILENAME'\" with title \"nodemon\"'"
+    }
+  }
