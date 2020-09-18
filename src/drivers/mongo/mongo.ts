@@ -23,4 +23,13 @@ export class MongoDriver {
             return Promise.reject ('There already is an instance running');
         }
     }
+
+    static getConnection () {
+        return this.db;
+    }
+
+    static disconnect (): void {
+        MongoDriver.mongoClient.close();
+    }
+    
 }
