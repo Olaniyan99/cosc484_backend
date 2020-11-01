@@ -1,8 +1,19 @@
-export interface Post {
-  id: string;
+export interface IPost {
+  userID: string;
   author: string;
   text: string;
-  comment: string;
-  likes: number;
-  date_posted: string;
+  comment: [
+    {
+      userId: string;
+      text: string;
+      time_post: number;
+    }
+  ];
+  likes: [
+    {
+      userId: string;
+      time_liked: number;
+    }
+  ];
+  date_posted: number;
 }
