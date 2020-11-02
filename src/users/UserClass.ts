@@ -18,7 +18,7 @@ export class UserClass {
     const app = Router();
     app.post("/signup", UserClass.signUp); //This route is responsible for signing up new users.
     app.post("/login", UserClass.login); // This route is responsible for logining in exsiting users.
-
+    app.post("/user-delete/id:", UserClass.delUser)
     // .patch(UserClass.updateUser)
     // .post(UserClass.deleteUser)
 
@@ -101,5 +101,12 @@ export class UserClass {
     } catch (e) {
       res.send(e);
     }
+  }
+  static async delUser(req:Request, res: Response){
+    const userInfo = req.body.id;
+    const user = await UserClass.dbConnection()
+    .collection("users")
+    .deleteOne( {id: new ObjectID(userInfo)})
+
   }
 }
