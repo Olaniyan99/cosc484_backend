@@ -6,7 +6,7 @@ require("dotenv").config();
 const app = ExpressDriver.build();
 const server = http.createServer(app)
 const connectionString = process.env.dbURI;
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
     console.log(`Social Media backend is running on ${PORT}`);
