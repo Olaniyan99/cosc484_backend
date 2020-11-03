@@ -3,6 +3,7 @@ import cors from "cors";
 import * as bodyParser from "body-parser";
 import cookieParser = require("cookie-parser");
 import { UserClass } from "../../users/UserClass";
+import { PostClass } from "../../posts/PostClass";
 
 export class ExpressDriver {
   static app = exp();
@@ -18,6 +19,7 @@ export class ExpressDriver {
     this.app.set("trust proxy", true);
     this.app.use(cookieParser());
     this.app.use(UserClass.buildRouter());
+    this.app.use(PostClass.buildRouter());
 
     return this.app;
   }

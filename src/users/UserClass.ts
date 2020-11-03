@@ -16,6 +16,7 @@ export class UserClass {
 
   public static buildRouter() {
     const app = Router();
+    app.get("/users", UserClass.getUsers)
     app.post("/signup", UserClass.signUp); //This route is responsible for signing up new users.
     app.post("/login", UserClass.login); // This route is responsible for logining in exsiting users.
 
@@ -100,6 +101,20 @@ export class UserClass {
       });
     } catch (e) {
       res.send(e);
+    }
+  }
+  static async getUsers(req: Request, res: Response) {
+    try {
+      const users = await UserClass.dbConnection()
+        .collection(COLLECTION.USERS)
+        .find()
+        .toArray();
+      res.status(200).json({
+        message: "ok",
+        users
+      });
+    } catch (e) {
+      throw e;
     }
   }
 }

@@ -6,14 +6,12 @@ export interface IPost {
     {
       userId: string;
       text: string;
-      time_post: number;
     }
   ];
   likes: [
     {
       userId: string;
-      time_liked: number;
+      like: boolean
     }
   ];
-  date_posted: number;
 }
