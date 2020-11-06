@@ -22,6 +22,7 @@ export class PostClass {
     app.delete('/users/:userId/post/:postId/like', this.UnLikePost);
     app.post('/users/:userId/post/:postId/comment', this.leaveComment);
     app.delete('/users/:userId/post/:postId/comment', this.removeComment);
+    app.post('/users/:userId/post/postId/likeComment',         this.likeComment);
     return app;
   }
 
@@ -282,8 +283,41 @@ export class PostClass {
       throw e;
     }
   }
+
+  static async likeComment(req: Request, res: Response){
+    try{
+        const postId = req.params.postId;
+        const userId = req.params.userId;
+        const likeObj = {
+            userID: req.params.userId,
+            like: req.body.like,
+        }
+        //Checks to see user liking the comment exists
+        const user = await PostClass.dbConnection()
+        .collection("users").findOne({_id: new ObjectID(userId)})
+        if(!user){
+            throw console.error("The specified user ID doesnt exist or is Invalid")
+        }
+        //Make sure comment exists
+        const post = await PostClass.dbConnection()
+        .collection(COLLECTION.POSTS).findOne({_id: new ObjectID(postId)})
+        if(!post){
+            throw console.error("The specified post either doesnt exist or is Invalid")
+        }
+        //using $addToSet operator to check exist before append the element ino the array
+        const updateLike = await PostClass.dbConnection()
+        .collection(COLLECTION.POSTS).updateOne({_id: new ObjectID(postId)}, {$addToSet: {likeComment: likeObj}})
+
+        res.status(200).json({
+            message: `Like on comment with id: ${postId} by ${user.name} has been liked`,
+            updateLike
+})
+    }catch (e){
+        throw e;
+    }
 }
 
+}
 
 export function validateNonNullFields(info: any) {
   const keys = Object.keys(info);

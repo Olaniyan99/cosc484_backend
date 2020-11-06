@@ -6,6 +6,7 @@ export interface IPost {
     {
       userId: string;
       text: string;
+      likeComment: boolean;
     }
   ];
   likes: [
