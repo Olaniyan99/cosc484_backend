@@ -19,7 +19,7 @@ export class UserClass {
     app.get("/users", UserClass.getUsers)
     app.post("/signup", UserClass.signUp); //This route is responsible for signing up new users.
     app.post("/login", UserClass.login); // This route is responsible for logining in exsiting users.
-
+    app.post("/find-user/id:", UserClass.findUser); //This route is responsible for finding a user by ID.
     // .patch(UserClass.updateUser)
     // .post(UserClass.deleteUser)
 
@@ -117,4 +117,23 @@ export class UserClass {
       throw e;
     }
   }
+
+
+  static async findUser(req:Request, res: Response){
+    var mongodb_1 = require("mongodb");
+    const userInfo = req.body.id;
+    const users = await UserClass.dbConnection()
+    .collection("users").findOne( {id: new mongodb_1.ObjectID(userInfo)})
+    //.findOne( {id: new ObjectID(userInfo)})
+    if(!users){
+        throw console.error("The user ID cannot be found")
+
+    }
+
+
+    }
+
+
+
+  
 }
