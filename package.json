@@ -10,7 +10,7 @@
     "build": "tsc",
     "deploy": "git add . && git commit -m Heroku && git push heroku master"
   },
-  "author": "",
+  "author":"Eni Olaniyan",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.754.0",

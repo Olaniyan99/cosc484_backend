@@ -3,7 +3,7 @@ import { Router, Response, Request, NextFunction } from "express";
 import { UserSchema } from "./UserInterface";
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
-import { Db, ObjectID } from "mongodb";
+import { Db, ObjectId, ObjectID } from "mongodb";
 import "dotenv/config";
 
 enum COLLECTION {
@@ -17,11 +17,10 @@ export class UserClass {
   public static buildRouter() {
     const app = Router();
     app.get("/users", UserClass.getUsers)
-    app.post("/signup", UserClass.signUp); //This route is responsible for signing up new users.
+    app.post("/signup", UserClass.signUp); // This route is responsible for signing up new users.
     app.post("/login", UserClass.login); // This route is responsible for logining in exsiting users.
-
-    // .patch(UserClass.updateUser)
-    // .post(UserClass.deleteUser)
+    app.delete("/users/:userId", UserClass.deleteUser)
+    app.patch("/users/:userId", UserClass.updateUser)
 
     return app;
   }
@@ -85,7 +84,7 @@ export class UserClass {
       // step 2) check is user exist and if passwoard is correct
       const user = await UserClass.dbConnection()
         .collection("users")
-        .findOne({ $and: [{ email: email }, { password: password }] });
+        .findOne({ $or: [{ email: email }, { password: password }] });
       //hashes the password being entered and compares with the encrypted ones in the db to find a match. if the email or password doesnt match any user in the db, throws a 401 (unauthorized).
       if (!user || !(await bcrypt.compare(password, user.password))) {
         return res
@@ -115,6 +114,37 @@ export class UserClass {
       });
     } catch (e) {
       throw e;
+    }
+  }
+
+  static async updateUser(req: Request, res: Response) {
+    try {
+      const updateObj = req.body
+      const userId = req.params.userId
+      const update = await UserClass.dbConnection()
+      .collection(COLLECTION.USERS)
+      .findOneAndUpdate({ _id: new ObjectID(userId) }, {$set:{updateObj}})
+
+      res.status(200).json({
+        message: `User with id ${userId} has been updated` ,
+        update
+      })
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  static async deleteUser(req: Request, res: Response) {
+    try {
+      const userId = req.params.userId
+        const deleteUser = await UserClass.dbConnection()
+        .collection(COLLECTION.USERS).deleteOne({ _id: new ObjectID(userId) })
+        res.status(200).json({
+            message: "Success!! User has been deleted",
+            deleteUser
+        })
+    } catch(e) {
+        throw e
     }
   }
 }
