@@ -45,6 +45,10 @@ export class UserClass {
   static async signUp(req: Request, res: Response) {
     //signing up
     try {
+      const email = await UserClass.dbConnection()
+      .collection("users")
+      .findOne({email: req.body.email});
+      if (!email) {
       const hashPassword = await bcrypt.hash(req.body.password, 12); //encrypts the password field passed in req.body.password
       const newUser = new UserSchema(
         req.body.name,
@@ -67,6 +71,8 @@ export class UserClass {
         insertUser,
         token,
       });
+    }
+    throw console.error("User with this email already exists, please login or sign up with a different email");
     } catch (e) {
       res.send(e);
     }
