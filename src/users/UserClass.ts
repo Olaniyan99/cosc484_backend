@@ -74,7 +74,7 @@ export class UserClass {
     }
     throw console.error("User with this email already exists, please login or sign up with a different email");
     } catch (e) {
-      res.send(e);
+      res.send(e); 
     }
   }
 
