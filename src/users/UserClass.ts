@@ -72,7 +72,9 @@ export class UserClass {
         token,
       });
     }
-    throw console.error("User with this email already exists, please login or sign up with a different email");
+    res.status(400).json({
+      message: `user with email: ${req.body.email} already exists`
+    })
     } catch (e) {
       res.send(e); 
     }
